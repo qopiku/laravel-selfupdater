@@ -1,8 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
-namespace Codedge\Updater;
+namespace Qopiku\Updater;
 
 use Illuminate\Support\Facades\Facade;
 

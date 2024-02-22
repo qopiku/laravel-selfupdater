@@ -1,15 +1,13 @@
 <?php
 
-declare(strict_types=1);
+namespace Qopiku\Updater\Models;
 
-namespace Codedge\Updater\Models;
-
-use Codedge\Updater\Events\UpdateFailed;
-use Codedge\Updater\Events\UpdateSucceeded;
-use Codedge\Updater\Traits\UseVersionFile;
 use Exception;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use Qopiku\Updater\Events\UpdateFailed;
+use Qopiku\Updater\Events\UpdateSucceeded;
+use Qopiku\Updater\Traits\UseVersionFile;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
@@ -80,9 +78,9 @@ final class UpdateExecutor
     private function moveFiles(string $folder): void
     {
         $files = (new Finder())->in($folder)
-                               ->exclude(config('self-update.exclude_folders'))
-                               ->ignoreDotFiles(false)
-                               ->files();
+            ->exclude(config('self-update.exclude_folders'))
+            ->ignoreDotFiles(false)
+            ->files();
 
         collect($files)->each(function (SplFileInfo $file) {
             if ($file->getRealPath()) {
@@ -103,7 +101,7 @@ final class UpdateExecutor
         }));
 
         $sorted->each(function (SplFileInfo $directory) {
-            if (!dirsIntersect(File::directories($directory->getRealPath()), config('self-update.exclude_folders'))) {
+            if (! dirsIntersect(File::directories($directory->getRealPath()), config('self-update.exclude_folders'))) {
                 File::copyDirectory(
                     $directory->getRealPath(),
                     Str::finish($this->basePath, DIRECTORY_SEPARATOR).Str::finish($directory->getRelativePath(), DIRECTORY_SEPARATOR).$directory->getBasename()

@@ -1,14 +1,12 @@
 <?php
 
-declare(strict_types=1);
+namespace Qopiku\Updater;
 
-namespace Codedge\Updater;
-
-use Codedge\Updater\Commands\CheckForUpdate;
-use Codedge\Updater\Models\UpdateExecutor;
-use Codedge\Updater\Notifications\EventHandler;
-use Codedge\Updater\SourceRepositoryTypes\GithubRepositoryType;
 use Illuminate\Support\ServiceProvider;
+use Qopiku\Updater\Commands\CheckForUpdate;
+use Qopiku\Updater\Models\UpdateExecutor;
+use Qopiku\Updater\Notifications\EventHandler;
+use Qopiku\Updater\SourceRepositoryTypes\GithubRepositoryType;
 
 class UpdaterServiceProvider extends ServiceProvider
 {

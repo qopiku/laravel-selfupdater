@@ -1,19 +1,17 @@
 <?php
 
-declare(strict_types=1);
+namespace Qopiku\Updater\SourceRepositoryTypes;
 
-namespace Codedge\Updater\SourceRepositoryTypes;
-
-use Codedge\Updater\Contracts\SourceRepositoryTypeContract;
-use Codedge\Updater\Events\UpdateAvailable;
-use Codedge\Updater\Exceptions\VersionException;
-use Codedge\Updater\Models\Release;
-use Codedge\Updater\Models\UpdateExecutor;
-use Codedge\Updater\SourceRepositoryTypes\GithubRepositoryTypes\GithubBranchType;
-use Codedge\Updater\SourceRepositoryTypes\GithubRepositoryTypes\GithubTagType;
-use Codedge\Updater\Traits\UseVersionFile;
 use Exception;
 use InvalidArgumentException;
+use Qopiku\Updater\Contracts\SourceRepositoryTypeContract;
+use Qopiku\Updater\Events\UpdateAvailable;
+use Qopiku\Updater\Exceptions\VersionException;
+use Qopiku\Updater\Models\Release;
+use Qopiku\Updater\Models\UpdateExecutor;
+use Qopiku\Updater\SourceRepositoryTypes\GithubRepositoryTypes\GithubBranchType;
+use Qopiku\Updater\SourceRepositoryTypes\GithubRepositoryTypes\GithubTagType;
+use Qopiku\Updater\Traits\UseVersionFile;
 
 class GithubRepositoryType
 {
@@ -22,6 +20,7 @@ class GithubRepositoryType
     const BASE_URL = 'https://api.github.com';
 
     protected array $config;
+
     protected UpdateExecutor $updateExecutor;
 
     public function __construct(array $config, UpdateExecutor $updateExecutor)
@@ -53,7 +52,7 @@ class GithubRepositoryType
 
     protected function useBranchForVersions(): bool
     {
-        return !empty($this->config['use_branch']);
+        return ! empty($this->config['use_branch']);
     }
 
     public function getVersionInstalled(): string
@@ -74,14 +73,14 @@ class GithubRepositoryType
     {
         $version = $currentVersion ?: $this->getVersionInstalled();
 
-        if (!$version) {
+        if (! $version) {
             throw VersionException::versionInstalledNotFound();
         }
 
         $versionAvailable = $this->getVersionAvailable(); //@phpstan-ignore-line
 
         if (version_compare($version, $versionAvailable, '<')) {
-            if (!$this->versionFileExists()) {
+            if (! $this->versionFileExists()) {
                 $this->setVersionFile($versionAvailable);
             }
             event(new UpdateAvailable($versionAvailable));

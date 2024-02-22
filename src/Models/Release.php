@@ -1,16 +1,14 @@
 <?php
 
-declare(strict_types=1);
+namespace Qopiku\Updater\Models;
 
-namespace Codedge\Updater\Models;
-
-use Codedge\Updater\Exceptions\ReleaseException;
-use Codedge\Updater\Traits\SupportPrivateAccessToken;
 use Exception;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
+use Qopiku\Updater\Exceptions\ReleaseException;
+use Qopiku\Updater\Traits\SupportPrivateAccessToken;
 use Symfony\Component\Finder\Finder;
 
 final class Release
@@ -67,7 +65,7 @@ final class Release
     {
         $this->storagePath = $storagePath;
 
-        if (!File::exists($this->storagePath)) {
+        if (! File::exists($this->storagePath)) {
             File::makeDirectory($this->storagePath, 493, true, true);
         }
 
@@ -79,7 +77,7 @@ final class Release
      */
     public function updateStoragePath(): self
     {
-        if (!empty($this->getRelease())) {
+        if (! empty($this->getRelease())) {
             $this->storagePath = Str::finish($this->storagePath, DIRECTORY_SEPARATOR).$this->getRelease();
 
             return $this;
@@ -94,7 +92,7 @@ final class Release
     }
 
     /**
-     * @param array<string> $excluded
+     * @param  array<string>  $excluded
      */
     public function setUpdatePath(string $updatePath, array $excluded = []): self
     {
@@ -129,7 +127,7 @@ final class Release
 
     public function extract(bool $deleteSource = true): bool
     {
-        if (!File::exists($this->getStoragePath())) {
+        if (! File::exists($this->getStoragePath())) {
             throw ReleaseException::archiveFileNotFound($this->getStoragePath());
         }
 
@@ -180,11 +178,11 @@ final class Release
         }
 
         return Http::withHeaders($headers)
-                   ->withOptions([
-                       'sink' => $this->getStoragePath(),
-                   ])
-                   ->timeout(config('self-update.download_timeout') ?? 400)
-                   ->get($this->getDownloadUrl());
+            ->withOptions([
+                'sink' => $this->getStoragePath(),
+            ])
+            ->timeout(config('self-update.download_timeout') ?? 400)
+            ->get($this->getDownloadUrl());
     }
 
     /**
@@ -202,7 +200,7 @@ final class Release
                 createFolderFromFile($this->getStoragePath()).now()->toDateString()
             );
 
-            if (!$moved) {
+            if (! $moved) {
                 return false;
             }
 
@@ -226,14 +224,14 @@ final class Release
         $extractionDir = createFolderFromFile($this->getStoragePath());
 
         // Check if source archive is (probably) deleted but extracted folder is there.
-        if (!File::exists($this->getStoragePath())
+        if (! File::exists($this->getStoragePath())
             && File::exists($extractionDir)) {
             return true;
         }
 
         // Check if source archive is there but not extracted
         if (File::exists($this->getStoragePath())
-            && !File::exists($extractionDir)) {
+            && ! File::exists($extractionDir)) {
             return true;
         }
 

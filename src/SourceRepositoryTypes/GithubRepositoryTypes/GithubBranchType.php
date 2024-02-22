@@ -1,14 +1,7 @@
 <?php
 
-declare(strict_types=1);
+namespace Qopiku\Updater\SourceRepositoryTypes\GithubRepositoryTypes;
 
-namespace Codedge\Updater\SourceRepositoryTypes\GithubRepositoryTypes;
-
-use Codedge\Updater\Contracts\SourceRepositoryTypeContract;
-use Codedge\Updater\Exceptions\ReleaseException;
-use Codedge\Updater\Models\Release;
-use Codedge\Updater\Models\UpdateExecutor;
-use Codedge\Updater\SourceRepositoryTypes\GithubRepositoryType;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\InvalidArgumentException;
 use GuzzleHttp\Utils;
@@ -17,10 +10,16 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Qopiku\Updater\Contracts\SourceRepositoryTypeContract;
+use Qopiku\Updater\Exceptions\ReleaseException;
+use Qopiku\Updater\Models\Release;
+use Qopiku\Updater\Models\UpdateExecutor;
+use Qopiku\Updater\SourceRepositoryTypes\GithubRepositoryType;
 
 final class GithubBranchType extends GithubRepositoryType implements SourceRepositoryTypeContract
 {
     protected ClientInterface $client;
+
     protected Release $release;
 
     public function __construct(UpdateExecutor $updateExecutor)
@@ -29,8 +28,8 @@ final class GithubBranchType extends GithubRepositoryType implements SourceRepos
 
         $this->release = resolve(Release::class);
         $this->release->setStoragePath(Str::finish($this->config['download_path'], DIRECTORY_SEPARATOR))
-                      ->setUpdatePath(base_path(), config('self-update.exclude_folders'))
-                      ->setAccessToken($this->config['private_access_token']);
+            ->setUpdatePath(base_path(), config('self-update.exclude_folders'))
+            ->setAccessToken($this->config['private_access_token']);
     }
 
     public function fetch(string $version = ''): Release
@@ -50,11 +49,11 @@ final class GithubBranchType extends GithubRepositoryType implements SourceRepos
         $release = $this->selectRelease($releases, $version);
 
         $this->release->setVersion($release->commit->author->date)
-                      ->setRelease($release->sha.'.zip')
-                      ->updateStoragePath()
-                      ->setDownloadUrl($this->generateArchiveUrl($release->sha));
+            ->setRelease($release->sha.'.zip')
+            ->updateStoragePath()
+            ->setDownloadUrl($this->generateArchiveUrl($release->sha));
 
-        if (!$this->release->isSourceAlreadyFetched()) {
+        if (! $this->release->isSourceAlreadyFetched()) {
             $this->release->download();
             $this->release->extract();
         }
@@ -66,7 +65,7 @@ final class GithubBranchType extends GithubRepositoryType implements SourceRepos
     {
         $release = $collection->first();
 
-        if (!empty($version)) {
+        if (! empty($version)) {
             if ($collection->contains('commit.author.date', $version)) {
                 $release = $collection->where('commit.author.date', $version)->first();
             } else {

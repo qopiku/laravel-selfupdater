@@ -1,12 +1,11 @@
 <?php
 
-declare(strict_types=1);
-
-namespace Codedge\Updater\Traits;
+namespace Qopiku\Updater\Traits;
 
 trait SupportPrivateAccessToken
 {
     private string $accessTokenPrefix = 'Bearer ';
+
     protected string $accessToken = '';
 
     public function getAccessToken(bool $withPrefix = true): string
@@ -25,7 +24,7 @@ trait SupportPrivateAccessToken
 
     public function hasAccessToken(): bool
     {
-        return !empty($this->accessToken);
+        return ! empty($this->accessToken);
     }
 
     public function setAccessTokenPrefix(string $prefix): void

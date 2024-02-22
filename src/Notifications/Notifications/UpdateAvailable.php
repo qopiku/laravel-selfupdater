@@ -1,12 +1,10 @@
 <?php
 
-declare(strict_types=1);
+namespace Qopiku\Updater\Notifications\Notifications;
 
-namespace Codedge\Updater\Notifications\Notifications;
-
-use Codedge\Updater\Events\UpdateAvailable as UpdateAvailableEvent;
-use Codedge\Updater\Notifications\BaseNotification;
 use Illuminate\Notifications\Messages\MailMessage;
+use Qopiku\Updater\Events\UpdateAvailable as UpdateAvailableEvent;
+use Qopiku\Updater\Notifications\BaseNotification;
 
 final class UpdateAvailable extends BaseNotification
 {

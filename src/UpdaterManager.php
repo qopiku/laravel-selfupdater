@@ -1,19 +1,17 @@
 <?php
 
-declare(strict_types=1);
+namespace Qopiku\Updater;
 
-namespace Codedge\Updater;
-
-use Codedge\Updater\Contracts\SourceRepositoryTypeContract;
-use Codedge\Updater\Contracts\UpdaterContract;
-use Codedge\Updater\Models\UpdateExecutor;
-use Codedge\Updater\SourceRepositoryTypes\GiteaRepositoryType;
-use Codedge\Updater\SourceRepositoryTypes\GithubRepositoryType;
-use Codedge\Updater\SourceRepositoryTypes\GitlabRepositoryType;
-use Codedge\Updater\SourceRepositoryTypes\HttpRepositoryType;
 use Exception;
 use Illuminate\Foundation\Application;
 use InvalidArgumentException;
+use Qopiku\Updater\Contracts\SourceRepositoryTypeContract;
+use Qopiku\Updater\Contracts\UpdaterContract;
+use Qopiku\Updater\Models\UpdateExecutor;
+use Qopiku\Updater\SourceRepositoryTypes\GiteaRepositoryType;
+use Qopiku\Updater\SourceRepositoryTypes\GithubRepositoryType;
+use Qopiku\Updater\SourceRepositoryTypes\GitlabRepositoryType;
+use Qopiku\Updater\SourceRepositoryTypes\HttpRepositoryType;
 
 /**
  * UpdaterManager.

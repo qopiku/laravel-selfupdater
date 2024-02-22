@@ -1,14 +1,7 @@
 <?php
 
-declare(strict_types=1);
+namespace Qopiku\Updater\SourceRepositoryTypes\GithubRepositoryTypes;
 
-namespace Codedge\Updater\SourceRepositoryTypes\GithubRepositoryTypes;
-
-use Codedge\Updater\Contracts\SourceRepositoryTypeContract;
-use Codedge\Updater\Exceptions\ReleaseException;
-use Codedge\Updater\Models\Release;
-use Codedge\Updater\Models\UpdateExecutor;
-use Codedge\Updater\SourceRepositoryTypes\GithubRepositoryType;
 use Exception;
 use GuzzleHttp\Exception\InvalidArgumentException;
 use GuzzleHttp\Utils;
@@ -17,6 +10,11 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Qopiku\Updater\Contracts\SourceRepositoryTypeContract;
+use Qopiku\Updater\Exceptions\ReleaseException;
+use Qopiku\Updater\Models\Release;
+use Qopiku\Updater\Models\UpdateExecutor;
+use Qopiku\Updater\SourceRepositoryTypes\GithubRepositoryType;
 
 final class GithubTagType extends GithubRepositoryType implements SourceRepositoryTypeContract
 {
@@ -28,16 +26,16 @@ final class GithubTagType extends GithubRepositoryType implements SourceReposito
 
         $this->release = resolve(Release::class);
         $this->release->setStoragePath(Str::finish($this->config['download_path'], DIRECTORY_SEPARATOR))
-                      ->setUpdatePath(base_path(), config('self-update.exclude_folders'))
-                      ->setAccessToken($this->config['private_access_token']);
+            ->setUpdatePath(base_path(), config('self-update.exclude_folders'))
+            ->setAccessToken($this->config['private_access_token']);
     }
 
     /**
      * Get the latest version that has been published in a certain repository.
      * Example: 2.6.5 or v2.6.5.
      *
-     * @param string $prepend Prepend a string to the latest version
-     * @param string $append  Append a string to the latest version
+     * @param  string  $prepend  Prepend a string to the latest version
+     * @param  string  $append  Append a string to the latest version
      *
      * @throws Exception
      */
@@ -78,11 +76,11 @@ final class GithubTagType extends GithubRepositoryType implements SourceReposito
         $release = $this->selectRelease($releases, $version);
 
         $this->release->setVersion($release->tag_name)
-                      ->setRelease($release->tag_name.'.zip')
-                      ->updateStoragePath()
-                      ->setDownloadUrl($release->zipball_url);
+            ->setRelease($release->tag_name.'.zip')
+            ->updateStoragePath()
+            ->setDownloadUrl($release->zipball_url);
 
-        if (!$this->release->isSourceAlreadyFetched()) {
+        if (! $this->release->isSourceAlreadyFetched()) {
             $this->release->download();
             $this->release->extract();
         }
@@ -94,7 +92,7 @@ final class GithubTagType extends GithubRepositoryType implements SourceReposito
     {
         $release = $collection->first();
 
-        if (!empty($version)) {
+        if (! empty($version)) {
             if ($collection->contains('tag_name', $version)) {
                 $release = $collection->where('tag_name', $version)->first();
             } else {

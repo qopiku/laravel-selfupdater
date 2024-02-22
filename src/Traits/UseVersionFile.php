@@ -1,8 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
-namespace Codedge\Updater\Traits;
+namespace Qopiku\Updater\Traits;
 
 use Illuminate\Support\Facades\Storage;
 

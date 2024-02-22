@@ -1,10 +1,8 @@
 <?php
 
-declare(strict_types=1);
+namespace Qopiku\Updater\Events;
 
-namespace Codedge\Updater\Events;
-
-use Codedge\Updater\Models\Release;
+use Qopiku\Updater\Models\Release;
 
 class UpdateSucceeded
 {

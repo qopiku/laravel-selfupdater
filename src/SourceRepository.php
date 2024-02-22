@@ -1,16 +1,14 @@
 <?php
 
-declare(strict_types=1);
+namespace Qopiku\Updater;
 
-namespace Codedge\Updater;
-
-use Codedge\Updater\Contracts\SourceRepositoryTypeContract;
-use Codedge\Updater\Models\Release;
-use Codedge\Updater\Models\UpdateExecutor;
-use Codedge\Updater\Traits\SupportPrivateAccessToken;
-use Codedge\Updater\Traits\UseVersionFile;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Artisan;
+use Qopiku\Updater\Contracts\SourceRepositoryTypeContract;
+use Qopiku\Updater\Models\Release;
+use Qopiku\Updater\Models\UpdateExecutor;
+use Qopiku\Updater\Traits\SupportPrivateAccessToken;
+use Qopiku\Updater\Traits\UseVersionFile;
 
 /**
  * SourceRepository.
@@ -20,10 +18,11 @@ use Illuminate\Support\Facades\Artisan;
  */
 final class SourceRepository implements SourceRepositoryTypeContract
 {
-    use UseVersionFile;
     use SupportPrivateAccessToken;
+    use UseVersionFile;
 
     protected SourceRepositoryTypeContract $sourceRepository;
+
     protected UpdateExecutor $updateExecutor;
 
     public function __construct(SourceRepositoryTypeContract $sourceRepository, UpdateExecutor $updateExecutor)
@@ -77,8 +76,8 @@ final class SourceRepository implements SourceRepositoryTypeContract
      * Get the latest version that has been published in a certain repository.
      * Example: 2.6.5 or v2.6.5.
      *
-     * @param string $prepend Prepend a string to the latest version
-     * @param string $append  Append a string to the latest version
+     * @param  string  $prepend  Prepend a string to the latest version
+     * @param  string  $append  Append a string to the latest version
      */
     public function getVersionAvailable(string $prepend = '', string $append = ''): string
     {

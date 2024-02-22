@@ -1,16 +1,7 @@
 <?php
 
-declare(strict_types=1);
+namespace Qopiku\Updater\SourceRepositoryTypes;
 
-namespace Codedge\Updater\SourceRepositoryTypes;
-
-use Codedge\Updater\Contracts\SourceRepositoryTypeContract;
-use Codedge\Updater\Events\UpdateAvailable;
-use Codedge\Updater\Exceptions\ReleaseException;
-use Codedge\Updater\Exceptions\VersionException;
-use Codedge\Updater\Models\Release;
-use Codedge\Updater\Models\UpdateExecutor;
-use Codedge\Updater\Traits\UseVersionFile;
 use Exception;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
@@ -21,16 +12,28 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
 use League\Uri\Uri;
+use Qopiku\Updater\Contracts\SourceRepositoryTypeContract;
+use Qopiku\Updater\Events\UpdateAvailable;
+use Qopiku\Updater\Exceptions\ReleaseException;
+use Qopiku\Updater\Exceptions\VersionException;
+use Qopiku\Updater\Models\Release;
+use Qopiku\Updater\Models\UpdateExecutor;
+use Qopiku\Updater\Traits\UseVersionFile;
 
 class HttpRepositoryType implements SourceRepositoryTypeContract
 {
     use UseVersionFile;
 
     protected ClientInterface $client;
+
     protected array $config;
+
     protected Release $release;
+
     protected string $prepend;
+
     protected string $append;
+
     protected UpdateExecutor $updateExecutor;
 
     public function __construct(UpdateExecutor $updateExecutor)
@@ -43,8 +46,8 @@ class HttpRepositoryType implements SourceRepositoryTypeContract
 
         $this->release = resolve(Release::class);
         $this->release->setStoragePath(Str::finish($this->config['download_path'], DIRECTORY_SEPARATOR))
-                      ->setUpdatePath(base_path(), config('self-update.exclude_folders'))
-                      ->setAccessToken($this->config['private_access_token']);
+            ->setUpdatePath(base_path(), config('self-update.exclude_folders'))
+            ->setAccessToken($this->config['private_access_token']);
 
         $this->updateExecutor = $updateExecutor;
     }
@@ -59,14 +62,14 @@ class HttpRepositoryType implements SourceRepositoryTypeContract
     {
         $version = $currentVersion ?: $this->getVersionInstalled();
 
-        if (!$version) {
+        if (! $version) {
             throw VersionException::versionInstalledNotFound();
         }
 
         $versionAvailable = $this->getVersionAvailable();
 
         if (version_compare($version, $versionAvailable, '<')) {
-            if (!$this->versionFileExists()) {
+            if (! $this->versionFileExists()) {
                 $this->setVersionFile($this->getVersionAvailable());
                 event(new UpdateAvailable($this->getVersionAvailable()));
             }
@@ -94,11 +97,11 @@ class HttpRepositoryType implements SourceRepositoryTypeContract
         $release = $this->selectRelease($releaseCollection, $version);
 
         $this->release->setVersion($this->prepend.$release->name.$this->append)
-                      ->setRelease($this->prepend.$release->name.$this->append.'.zip')
-                      ->updateStoragePath()
-                      ->setDownloadUrl($release->zipball_url);
+            ->setRelease($this->prepend.$release->name.$this->append.'.zip')
+            ->updateStoragePath()
+            ->setDownloadUrl($release->zipball_url);
 
-        if (!$this->release->isSourceAlreadyFetched()) {
+        if (! $this->release->isSourceAlreadyFetched()) {
             $this->release->download();
             $this->release->extract();
         }
@@ -110,7 +113,7 @@ class HttpRepositoryType implements SourceRepositoryTypeContract
     {
         $release = $collection->first();
 
-        if (!empty($version)) {
+        if (! empty($version)) {
             if ($collection->contains('name', $version)) {
                 $release = $collection->where('name', $version)->first();
             } else {
@@ -141,8 +144,8 @@ class HttpRepositoryType implements SourceRepositoryTypeContract
      * Get the latest version that has been published in a certain repository.
      * Example: 2.6.5 or v2.6.5.
      *
-     * @param string $prepend Prepend a string to the latest version
-     * @param string $append  Append a string to the latest version
+     * @param  string  $prepend  Prepend a string to the latest version
+     * @param  string  $append  Append a string to the latest version
      *
      * @throws Exception|GuzzleException
      */
@@ -193,8 +196,8 @@ class HttpRepositoryType implements SourceRepositoryTypeContract
         }
 
         // Special handling when file version cannot be properly detected
-        if (!array_key_exists(2, $files)) {
-            foreach ($files[1] as $key=>$val) {
+        if (! array_key_exists(2, $files)) {
+            foreach ($files[1] as $key => $val) {
                 preg_match('/[a-zA-Z\-]([.\d]*)(?=\.\w+$)/', $val, $versions);
                 $files[][$key] = $versions[1];
             }
@@ -210,7 +213,7 @@ class HttpRepositoryType implements SourceRepositoryTypeContract
             $item = $uri->getHost() ? $item : $baseUrl.Str::start($item, '/');
 
             return (object) [
-                'name'        => $key,
+                'name' => $key,
                 'zipball_url' => $item,
             ];
         });

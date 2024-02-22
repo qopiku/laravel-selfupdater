@@ -1,5 +1,5 @@
 {
-    "name": "codedge/laravel-selfupdater",
+    "name": "qopiku/laravel-selfupdater",
     "description": "Providing an auto-updating functionality for your self-hosted Laravel application.",
     "license": "MIT",
     "keywords": [
@@ -21,31 +21,22 @@
         }
     ],
     "support": {
-        "issues": "https://github.com/codedge/laravel-selfupdater/issues",
-        "source": "https://github.com/codedge/laravel-selfupdater"
+        "issues": "https://github.com/qopiku/laravel-selfupdater/issues",
+        "source": "https://github.com/qopiku/laravel-selfupdater"
     },
     "require": {
         "php": "^8.1",
         "ext-json": "*",
         "ext-zip": "*",
-        "guzzlehttp/guzzle": "^7.5.0",
-        "illuminate/support": "^10",
-        "league/uri": "~6.7 || ~6.8",
-        "phpstan/extension-installer": "^1.2",
-        "phpstan/phpstan-phpunit": "^1.2"
-    },
-    "require-dev": {
-        "dg/bypass-finals": "^1.4",
-        "mikey179/vfsstream": "^1.6",
-        "mockery/mockery": "^1.5",
-        "orchestra/testbench": "^8.1",
-        "phpunit/phpunit": "^9.5.26"
+        "guzzlehttp/guzzle": "^7.2",
+        "illuminate/support": "^10.0",
+        "league/uri": "^7.0"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
     "autoload": {
         "psr-4": {
-            "Codedge\\Updater\\": "src/"
+            "Qopiku\\Updater\\": "src/"
         },
         "files": [
             "src/helpers.php"
@@ -53,29 +44,23 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Codedge\\Updater\\Tests\\": "tests/"
+            "Qopiku\\Updater\\Tests\\": "tests/"
         }
     },
     "config": {
         "allow-plugins": {
-            "ergebnis/composer-normalize": true,
-            "phpstan/extension-installer": true
+            "ergebnis/composer-normalize": true
         },
         "sort-packages": true
     },
     "extra": {
         "laravel": {
             "aliases": {
-                "Updater": "Codedge\\Updater\\UpdaterFacade"
+                "Updater": "Qopiku\\Updater\\UpdaterFacade"
             },
             "providers": [
-                "Codedge\\Updater\\UpdaterServiceProvider"
+                "Qopiku\\Updater\\UpdaterServiceProvider"
             ]
         }
-    },
-    "scripts": {
-        "phpstan": "./vendor/bin/phpstan",
-        "test": "./vendor/bin/phpunit",
-        "test-coverage": "XDEBUG_MODE=coverage ./vendor/bin/phpunit --coverage-html=build/coverage-html"
     }
 }

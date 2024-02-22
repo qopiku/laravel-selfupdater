@@ -1,12 +1,10 @@
 <?php
 
-declare(strict_types=1);
+namespace Qopiku\Updater\Notifications\Notifications;
 
-namespace Codedge\Updater\Notifications\Notifications;
-
-use Codedge\Updater\Events\UpdateFailed as UpdateFailedEvent;
-use Codedge\Updater\Notifications\BaseNotification;
 use Illuminate\Notifications\Messages\MailMessage;
+use Qopiku\Updater\Events\UpdateFailed as UpdateFailedEvent;
+use Qopiku\Updater\Notifications\BaseNotification;
 
 final class UpdateFailed extends BaseNotification
 {

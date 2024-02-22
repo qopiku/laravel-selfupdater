@@ -1,8 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
-namespace Codedge\Updater\Contracts;
+namespace Qopiku\Updater\Contracts;
 
 interface UpdaterContract
 {

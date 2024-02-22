@@ -1,11 +1,9 @@
 <?php
 
-declare(strict_types=1);
+namespace Qopiku\Updater\Commands;
 
-namespace Codedge\Updater\Commands;
-
-use Codedge\Updater\UpdaterManager;
 use Illuminate\Console\Command;
+use Qopiku\Updater\UpdaterManager;
 
 class CheckForUpdate extends Command
 {

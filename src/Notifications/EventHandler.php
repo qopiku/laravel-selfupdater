@@ -1,16 +1,14 @@
 <?php
 
-declare(strict_types=1);
+namespace Qopiku\Updater\Notifications;
 
-namespace Codedge\Updater\Notifications;
-
-use Codedge\Updater\Events\UpdateAvailable;
-use Codedge\Updater\Events\UpdateFailed;
-use Codedge\Updater\Events\UpdateSucceeded;
 use Exception;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Notifications\Notification;
+use Qopiku\Updater\Events\UpdateAvailable;
+use Qopiku\Updater\Events\UpdateFailed;
+use Qopiku\Updater\Events\UpdateSucceeded;
 
 final class EventHandler
 {
@@ -49,7 +47,7 @@ final class EventHandler
                 return $notificationName === $eventName;
             });
 
-        if (!$notificationClass) {
+        if (! $notificationClass) {
             throw new Exception('Notification could not be sent.');
         }
 

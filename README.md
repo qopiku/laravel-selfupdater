@@ -1,12 +1,5 @@
 # Laravel Application Self-Updater
 
-[![Latest Stable Version](https://poser.pugx.org/codedge/laravel-selfupdater/v/stable?format=flat-square)](https://packagist.org/packages/codedge/laravel-selfupdater)
-[![Total Downloads](https://poser.pugx.org/codedge/laravel-selfupdater/downloads?format=flat-square)](https://packagist.org/packages/codedge/laravel-selfupdater)
-[![](https://github.com/codedge/laravel-selfupdater/workflows/Tests/badge.svg)](https://github.com/codedge/laravel-selfupdater/actions)
-[![StyleCI](https://styleci.io/repos/64463948/shield)](https://styleci.io/repos/64463948)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/dd836e58656b4e25b34b2a4ac8197142)](https://www.codacy.com/app/codedge/laravel-selfupdater?utm_source=github.com&utm_medium=referral&utm_content=codedge/laravel-selfupdater)
-[![codecov](https://codecov.io/gh/codedge/laravel-selfupdater/branch/master/graph/badge.svg)](https://codecov.io/gh/codedge/laravel-selfupdater)
-
 This package provides some basic methods to implement a self updating
 functionality for your Laravel application.
 
@@ -18,14 +11,14 @@ functionality for your Laravel application.
 -   Http-based archives
 
 Usually you need this when distributing a self-hosted Laravel application
-that needs some updating mechanism without [Composer](https://getcomposer.org/).
+that needs some updating mechanism without Composer.
 
 ## Install
 
-To install the latest version from the master using [Composer](https://getcomposer.org/):
+To install the latest version from the master using Composer:
 
 ```sh
-$ composer require codedge/laravel-selfupdater
+$ composer require qopiku/laravel-selfupdater
 ```
 
 ## Configuration
@@ -33,7 +26,7 @@ $ composer require codedge/laravel-selfupdater
 After installing the package you need to publish the configuration file via
 
 ```sh
-$ php artisan vendor:publish --provider="Codedge\Updater\UpdaterServiceProvider"
+$ php artisan vendor:publish --provider="Qopiku\Updater\UpdaterServiceProvider"
 ```
 
 **Note:** Please enter correct value for vendor and repository name in your `config/self-updater.php` if you want to use Github as source for your updates.
@@ -111,11 +104,9 @@ a `private_access_token` field, where you can set the token.
 To start an update process, i. e. in a controller, just use:
 
 ```php
-Route::get('/', function (\Codedge\Updater\UpdaterManager $updater) {
-
+Route::get('/', function (\Qopiku\Updater\UpdaterManager $updater) {
     // Check if new version is available
     if($updater->source()->isNewVersionAvailable()) {
-
         // Get the current installed version
         echo $updater->source()->getVersionInstalled();
 
@@ -127,11 +118,9 @@ Route::get('/', function (\Codedge\Updater\UpdaterManager $updater) {
 
         // Run the update process
         $updater->source()->update($release);
-
     } else {
         echo "No new version available.";
     }
-
 });
 ```
 
@@ -152,7 +141,7 @@ This is the default. Updates will be fetched by using a tagged commit, aka relea
 
 #### Branch-based updates
 
-Select the branch that should be used via the `use_branch` setting [inside the configuration](https://github.com/codedge/laravel-selfupdater/blob/master/config/self-update.php).
+Select the branch that should be used via the `use_branch` setting [inside the configuration](https://github.com/qopiku/laravel-selfupdater/blob/master/config/self-update.php).
 
 ```php
 // ...

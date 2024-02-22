@@ -1,8 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
-namespace Codedge\Updater\Exceptions;
+namespace Qopiku\Updater\Exceptions;
 
 final class ReleaseException extends \Exception
 {

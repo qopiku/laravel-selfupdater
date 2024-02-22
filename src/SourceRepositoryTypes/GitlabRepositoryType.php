@@ -1,16 +1,7 @@
 <?php
 
-declare(strict_types=1);
+namespace Qopiku\Updater\SourceRepositoryTypes;
 
-namespace Codedge\Updater\SourceRepositoryTypes;
-
-use Codedge\Updater\Contracts\SourceRepositoryTypeContract;
-use Codedge\Updater\Events\UpdateAvailable;
-use Codedge\Updater\Exceptions\ReleaseException;
-use Codedge\Updater\Exceptions\VersionException;
-use Codedge\Updater\Models\Release;
-use Codedge\Updater\Models\UpdateExecutor;
-use Codedge\Updater\Traits\UseVersionFile;
 use Exception;
 use GuzzleHttp\Exception\InvalidArgumentException;
 use GuzzleHttp\Utils;
@@ -19,6 +10,13 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Qopiku\Updater\Contracts\SourceRepositoryTypeContract;
+use Qopiku\Updater\Events\UpdateAvailable;
+use Qopiku\Updater\Exceptions\ReleaseException;
+use Qopiku\Updater\Exceptions\VersionException;
+use Qopiku\Updater\Models\Release;
+use Qopiku\Updater\Models\UpdateExecutor;
+use Qopiku\Updater\Traits\UseVersionFile;
 
 class GitlabRepositoryType implements SourceRepositoryTypeContract
 {
@@ -27,7 +25,9 @@ class GitlabRepositoryType implements SourceRepositoryTypeContract
     const BASE_URL = 'https://gitlab.com';
 
     protected array $config;
+
     protected Release $release;
+
     protected UpdateExecutor $updateExecutor;
 
     public function __construct(UpdateExecutor $updateExecutor)
@@ -36,8 +36,8 @@ class GitlabRepositoryType implements SourceRepositoryTypeContract
 
         $this->release = resolve(Release::class);
         $this->release->setStoragePath(Str::finish($this->config['download_path'], DIRECTORY_SEPARATOR))
-                      ->setUpdatePath(base_path(), config('self-update.exclude_folders'))
-                      ->setAccessToken($this->config['private_access_token']);
+            ->setUpdatePath(base_path(), config('self-update.exclude_folders'))
+            ->setAccessToken($this->config['private_access_token']);
 
         $this->updateExecutor = $updateExecutor;
     }
@@ -51,14 +51,14 @@ class GitlabRepositoryType implements SourceRepositoryTypeContract
     {
         $version = $currentVersion ?: $this->getVersionInstalled();
 
-        if (!$version) {
+        if (! $version) {
             throw VersionException::versionInstalledNotFound();
         }
 
         $versionAvailable = $this->getVersionAvailable();
 
         if (version_compare($version, $versionAvailable, '<')) {
-            if (!$this->versionFileExists()) {
+            if (! $this->versionFileExists()) {
                 $this->setVersionFile($versionAvailable);
             }
             event(new UpdateAvailable($versionAvailable));
@@ -78,8 +78,8 @@ class GitlabRepositoryType implements SourceRepositoryTypeContract
      * Get the latest version that has been published in a certain repository.
      * Example: 2.6.5 or v2.6.5.
      *
-     * @param string $prepend Prepend a string to the latest version
-     * @param string $append  Append a string to the latest version
+     * @param  string  $prepend  Prepend a string to the latest version
+     * @param  string  $append  Append a string to the latest version
      *
      * @throws Exception
      */
@@ -117,11 +117,11 @@ class GitlabRepositoryType implements SourceRepositoryTypeContract
         $release = $this->selectRelease($releases, $version);
 
         $this->release->setVersion($release->tag_name)
-                      ->setRelease($release->tag_name.'.zip')
-                      ->updateStoragePath()
-                      ->setDownloadUrl($release->assets->sources[0]->url);
+            ->setRelease($release->tag_name.'.zip')
+            ->updateStoragePath()
+            ->setDownloadUrl($release->assets->sources[0]->url);
 
-        if (!$this->release->isSourceAlreadyFetched()) {
+        if (! $this->release->isSourceAlreadyFetched()) {
             $this->release->download();
             $this->release->extract();
         }
@@ -133,7 +133,7 @@ class GitlabRepositoryType implements SourceRepositoryTypeContract
     {
         $release = $collection->first();
 
-        if (!empty($version)) {
+        if (! empty($version)) {
             if ($collection->contains('tag_name', $version)) {
                 $release = $collection->where('tag_name', $version)->first();
             } else {
@@ -151,7 +151,7 @@ class GitlabRepositoryType implements SourceRepositoryTypeContract
     {
         return [
             'base_url' => $this->config['base_url'] ?? self::BASE_URL,
-            'url'      => '/api/v4/projects/'.$this->config['repository_id'].'/releases',
+            'url' => '/api/v4/projects/'.$this->config['repository_id'].'/releases',
         ];
     }
 
